@@ -1,0 +1,38 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Input Data Buku</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    </head>
+    <body class="blue-theme">
+        <h2>Input Data Buku</h2>
+        <div class="form-controller">
+            {% if error %}
+                <p style="color:red;">{{ error }}</p>
+            {% endif %}
+            <form action="/inputBuku" method="post">
+                <label for="title">Nama Buku:</label>
+                <input type="text" name="title" id="title" placeholder="Masukkan Nama" required>
+                <br>
+
+                <label for="author">Author:</label>
+                <input type="text" name="author" id="author" placeholder="Masukkan Penulis" required>
+                <br>
+
+                <label for="genre">Genre Buku:</label>
+                <input type="text" name="genre" id="genre" placeholder="Masukkan Genre" required>
+                <br>
+
+                <label for="stock">Stok:</label>
+                <input type="text" name="stock" id="stock" placeholder="Masukkan stok buku" required>
+                <br>
+
+                <input type="submit" value="Submit">
+
+                <a href="/" class="home-button">Back Home</a>
+            </form>
+
+        </div>     
+    </body>
+</html>

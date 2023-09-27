@@ -1,0 +1,79 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Search & Update Data Buku</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    </head>
+    <body class="purple-theme">
+        <h2>Search Data to Update</h2>
+        <div class="form-container">
+            <form action="/updateBuku" method="post">
+                <label class="field-label" for="title">Nama Buku</label>
+                <input type="text" id="title" name="title" placeholder="Enter name to search" required>
+                <input type="submit" value="search" class="update-button">
+            </form>
+            <a href="/" class="home-button">Back Home</a>
+        </div>
+        {% if data_list %}
+        <h3>Data Found:</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Judul</th>
+                <th>Penulis</th>
+                <th>Genre</th>
+                <th>Stok</th>
+                <th>Action</th>
+            </tr>
+            {% for data in data_list %}
+            <tr>
+                <td>{{ data.id}} </td>
+                <td>{{ data.title}} </td>
+                <td>{{ data.author}} </td>
+                <td>{{ data.genre}} </td>
+                <td>{{ data.stock}} </td>
+                <td>
+                    <button onclick="showUpdateForm(
+                        '{{ data.id }}', 
+                        '{{ data.title }}', 
+                        '{{ data.author }}', 
+                        '{{ data.genre }}', 
+                        '{{ data.stock }}')"
+                    class="updateButton">Update</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div id="updateForm" style="display:none;">
+            <h3>Update Data</h3>
+            <form action="/form_update_buku" method="post">
+                <input type="hidden" id="updateId" name="id">
+                <label class="field-label" for="updateTitle">Nama Buku:</label>
+                <input type="text" id="updateTitle" name="title" placeholder="New Name" required>
+                <label class="field-label" for="updateAuthor">Penulis:</label>
+                <input type="text" id="updateAuthor" name="author" placeholder="New Penulis" required>
+                <label class="field-label" for="updateGenre">Genre:</label>
+                <input type="text" id="updateGenre" name="genre" placeholder="New Genre" required>
+                <label class="field-label" for="updateStock">Stok:</label>
+                <input type="text" id="updateStock" name="stock" placeholder="New Stock" required>
+                <input type="submit" value="submit" class="update-button">
+            </form>
+        </div>
+        <script>
+            function showUpdateForm(id, title, author, genre,stock) {
+                document.getElementById('updateId').value = id;
+                document.getElementById('updateTitle').value = title;
+                document.getElementById('updateAuthor').value = author;
+                document.getElementById('updateGenre').value = genre;
+                document.getElementById('updateStock').value = stock;
+                document.getElementById('updateForm').style.display = 'block';
+            }
+        </script>
+        {% else %}
+        <p>Tidak ada data yang ditemukan untuk nama buku yang diberikan</p>
+        {% endif %}
+
+
+    </body>
+</html>

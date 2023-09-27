@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  title: Ambil Satu Data Buku
+  version: 1.0.0
+tags:
+  - name: Daftar API
+definitions:
+  Buku:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID buku
+      judul:
+        type: string
+        description: Nama buku
+      penulis:
+        type: string
+        description: Nama penulis
+      genre:
+        type: string
+        description: Jenis Genre
+      stok:
+        type: integer
+        description: Jumlah stok buku
+
+parameters:
+  - name: id_buku
+    in: path
+    description: ID buku yang ingin ditampilkan
+    required: true
+    type: integer
+
+responses:
+  200:
+    descriptions: Daftar semua buku
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/Buku'

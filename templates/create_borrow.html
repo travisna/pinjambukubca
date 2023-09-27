@@ -1,0 +1,44 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SIPUS - Pinjam Buku</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    </head>
+    <body class="blue-theme">
+        <h2>Pinjam Buku</h2>
+        <div class="form-controller">
+            {% if error %}
+                <p style="color:red;">{{ error }}</p>
+            {% endif %}
+            <form action="/inputPinjam" method="post">
+                <label for="user_id">Nama Peminjam:</label>
+                <input type="text" name="user_id" id="user_id" placeholder="Masukkan Nama" required>
+                <br>
+
+                <label for="id">Buku yang ingin dipinjam:</label>
+                <select name="id" id="id">
+                    {% if data_list %}
+                        {% for data in data_list %}
+                            <option value = {{ data.id}} >{{ data.title}} </option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+                <br>
+                <br>
+                <label for="borrow_date">Tanggal Pinjam:</label>
+                <input type="date" name="borrow_date" id="borrow_date" placeholder="Masukkan tanggal Pinjam" required>
+                <br>
+
+                <!--label for="return_date">Tangal Kembali:</label>
+                <input type="date" name="return_date" id="return_date" placeholder="Masukkan tanggal kembali" required>-->
+                <br>
+
+                <input type="submit" value="Submit">
+
+                <a href="/" class="home-button">Back Home</a>
+            </form>
+
+        </div>     
+    </body>
+</html>

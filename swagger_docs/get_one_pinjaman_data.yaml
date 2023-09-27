@@ -1,0 +1,35 @@
+openapi: 3.0.0
+info:
+  title: Ambil Satu Data Pinjaman
+  version: 1.0.0
+tags:
+  - name: Daftar API
+definitions:
+  Pinjaman:
+    type: object
+    properties:
+      id:
+        type: integer      
+      id_buku:
+        type: integer
+      peminjam:
+        type: string
+      tanggal_pinjam:
+        type: date
+      tanggal_kembali:
+        type: date
+
+parameters:
+  - name: id_buku
+    in: path
+    description: ID pinjaman yang ingin ditampilkan
+    required: true
+    type: integer
+
+responses:
+  200:
+    descriptions: Daftar semua pinjaman
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/Pinjaman'

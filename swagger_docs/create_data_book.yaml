@@ -1,0 +1,40 @@
+openapi: 3.0.0 #versi OpenAPI yang digunakan
+
+info:
+  title: Buat Data buku
+  version: 1.0.0
+
+tags:
+  - name: Daftar API
+
+parameters:
+  - in : body
+    name : body
+    desription : Data buku yang akan ditambahkan
+    required : true
+    schema:
+      $ref : '#/definitions/Buku'
+  
+responses:
+  200:
+    description : Data Buku berhasil ditambahakan
+    schema :
+      $ref : '#/definitions/Buku'
+
+  definitions :
+    Buku :
+      type : object
+      properties :
+        judul:
+          type: string
+        penulis:
+          type: string
+        genre:
+          type: string
+        stok:
+          type: integer
+      required:
+        - judul
+        - penulis
+        - genre
+        - stok

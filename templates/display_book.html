@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tampil Data Buku</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+        <style>
+            body{
+                background-color: darkkhaki;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/" class="home-button-display">Kembali ke Home</a>
+        <h2>Semua Data Buku</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Buku</th>
+                    <th>Penulis</th>
+                    <th>Genre</th>
+                    <th>Stok Buku</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for buku in buku_list %}
+                <tr>
+                    <td>{{ buku.id }}</td>
+                    <td>{{ buku.title }}</td>
+                    <td>{{ buku.author }}</td>
+                    <td>{{ buku.genre }}</td>
+                    <td>{{ buku.stock }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

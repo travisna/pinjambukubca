@@ -1,0 +1,25 @@
+openapi: 3.0.0
+info:
+  title: Update Data Buku
+  version: 1.0.0
+tags:
+  - name: Daftar API
+parameters:
+  - name: id
+    in: path
+    description: ID buku yang ingin diperbarui
+    required: true
+    type: integer
+  - in : body
+    name : body
+    description : Data buku yang akan diperbarui
+    required : true
+    schema : 
+      $ref : '#/definitions/Buku'
+responses:
+  200:
+    description : Data berhasil diperbarui
+    schema : 
+      $ref : '#/definitions/Buku'
+  404:
+    description : Data tidak ditemukan

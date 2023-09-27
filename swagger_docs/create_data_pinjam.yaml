@@ -1,0 +1,40 @@
+openapi: 3.0.0 #versi OpenAPI yang digunakan
+
+info:
+  title: Pinjam Buku
+  version: 1.0.0
+
+tags:
+  - name: Daftar API
+
+parameters:
+  - in : body
+    name : body
+    desription : Data pinjaman yang akan ditambahkan
+    required : true
+    schema:
+      $ref : '#/definitions/Pinjaman'
+  
+responses:
+  200:
+    description : Pinjaman berhasil dilakukan
+    schema :
+      $ref : '#/definitions/Pinjaman'
+
+  definitions :
+    Pinjaman :
+      type : object
+      properties :
+        id_buku:
+          type: integer
+        peminjam:
+          type: string
+        tanggal_pinjam:
+          type: date
+        tanggal_kembali:
+          type: date
+      required:
+        - id_buku
+        - peminjam
+        - tanggal_pinjam
+        - tanggal_kembali

@@ -1,0 +1,17 @@
+openapi: 3.0.0
+info:
+  title: Hapus Data Buku
+  version: 1.0.0
+tags:
+  - name: Daftar API
+parameters:
+  - name: id_buku
+    in: path
+    description: ID buku yang ingin dihapus
+    required: true
+    type: integer
+responses:
+  200:
+    description: Data buku berhasil dihapus
+  404:
+    description: Data tidak ditemukan

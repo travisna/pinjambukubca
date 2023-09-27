@@ -1,0 +1,80 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hapus Data Buku</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    </head>
+    <body class="red-theme">
+        <h2>Penghapusan Data Buku</h2>
+        <div class="form-container">
+            <form action="/deleteBuku" method="post">
+                <label class="field-label" for="title">Nama Buku:</label>
+                <input type="text" name="title" id="title" placeholder="Masukkan nama buku">
+                <br>
+                <input type="submit" value="Cari" class="delete-button">
+            </form>
+            <a href="/" class="home-button">Back Home</a>
+        </div>
+
+        {% if data_list %}
+        <h3>Data Found:</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Nama Buku</th>
+                <th>Penulis</th>
+                <th>Genre</th>
+                <th>Stok Buku</th>
+                <th>Action</th>
+            </tr>
+            {% for item in data_list %}
+            <tr>
+                <td>{{ item.id}} </td>
+                <td>{{ item.title}} </td>
+                <td>{{ item.author}} </td>
+                <td>{{ item.genre}} </td>
+                <td>{{ item.stock}} </td>
+                <td>
+                    <button onclick="confirmDelete(
+                        '{{ item.id }}', 
+                        '{{ item.title }}', 
+                        '{{ item.author }}', 
+                        '{{ item.genre }}',
+                        '{{ item.stock }}',
+                        )"
+                    class="deleteButton">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>Tidak ada data yang ditemukan untuk nama buku yang diberikan</p>
+        {% endif %}
+        <script>
+            function confirmDelete(id,title){
+                const isConfirmed = confirm(`Apakah anda yakin ingin menghapus data ${title}?`)
+                if (isConfirmed){
+                    fetch(`/deleteBuku/${id}`,{
+                        method:`DELETE`
+                    })
+                    .then(response => response.json())
+                    .then(item => {
+                        console.log(item.message)
+                        if(item.message.includes("berhasil dihapus")){
+                            alert("Data berhasil dihapus!");
+                            location.reload();
+                        }
+                        else{
+                            alert("Terjadi kesalahan saat menghapus data. Silahkan coba lagi.");
+                        }
+                    })
+                    .catch(error =>{
+                        console.error("Error:", error)
+                        alert("Terjadi kesalahan saat menghapus data. Silahkan coba lagi")
+                    });
+                }
+            }
+        </script>
+    </body>
+</html>
