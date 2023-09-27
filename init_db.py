@@ -1,7 +1,7 @@
 import sqlite3
 from sqlalchemy import create_engine,Column,Integer,String,MetaData,Table,ForeignKey
 
-DATABASE_URI = 'sqlite:///sipus.db'
+DATABASE_URI = 'mysql://root:hd9k9kgtJTI2g2oxJuqc@containers-us-west-185.railway.app:6589/railway'
 engine = create_engine(DATABASE_URI,echo=True)
 metadata = MetaData()
 
