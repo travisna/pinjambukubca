@@ -10,11 +10,11 @@ import os
 app=Flask(__name__)
 
 #Lokasi database
-DATABASE_PATH = 'C:/DATA TRV/TRAINING/PYTHON 230922/mypy/bcaflask/pinjambukubca/sipus.db'
+#DATABASE_PATH = 'C:/DATA TRV/TRAINING/PYTHON 230922/mypy/bcaflask/pinjambukubca/sipus.db'
 
 #Konfigurai Database
-app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///' + DATABASE_PATH
-#app.config['SQLALCHEMY_DATABASE_URI']= 'mysql+mysqlconnector://root:hd9k9kgtJTI2g2oxJuqc@containers-us-west-185.railway.app:6589/railway'
+#app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///' + DATABASE_PATH
+app.config['SQLALCHEMY_DATABASE_URI']= 'mysql+mysqlconnector://root:hd9k9kgtJTI2g2oxJuqc@containers-us-west-185.railway.app:6589/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['SWAGGER'] = {
