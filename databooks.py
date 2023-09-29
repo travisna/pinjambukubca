@@ -294,7 +294,7 @@ def get_all_pinjaman():
 def get_one_pinjaman(id):
         borrow = Borrowing.query.filter_by(id=id).first()
         
-        if not book:
+        if not borrow:
             return jsonify({'message':'Pinjaman tidak ditemukan'}),404
         
         borrow_data = {
