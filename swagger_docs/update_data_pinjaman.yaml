@@ -12,7 +12,7 @@ parameters:
     type: integer
   - in : body
     name : body
-    description : Data buku yang akan diperbarui
+    description : Data pinjaman yang akan diperbarui
     required : true
     schema : 
       $ref : '#/definitions/Pinjaman'

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SIPUS - Tampil Data Pinjaman</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+        <style>
+            body{
+                background-color: darkkhaki;
+            }
+        </style>
+    </head>
+    <body>
+        <a href="/" class="home-button-display">Kembali ke Home</a>
+        <h2>Data Pinjaman Buku</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Buku</th>
+                    <th>Nama Peminjam</th>
+                    <th>Tanggal Pinjam</th>
+                    <th>Tanggal Kembali</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pinjaman in pinjaman_list %}
+                <tr>
+                    <td>{{ pinjaman.id }}</td>
+                    <td>{{ pinjaman.judul_buku }}</td>
+                    <td>{{ pinjaman.user_id }}</td>
+                    <td>{{ pinjaman.borrow_date }}</td>
+                    <td>{{ pinjaman.return_date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,71 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SIPUS - Update Data Pinjam Buku</title>
+        <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+    </head>
+    <body class="purple-theme">
+        <h2>Search Data to Update</h2>
+        <div class="form-container">
+            <form action="/updatePinjam" method="post">
+                <label class="field-label" for="search">Nama Peminjam</label>
+                <input type="text" id="search" name="search" placeholder="Enter name to search" required>
+                <input type="submit" value="search" class="update-button">
+            </form>
+            <a href="/" class="home-button">Back Home</a>
+        </div>
+        {% if data_list %}
+        <h3>Data Found:</h3>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Nama Buku</th>
+                <th>Nama Peminjam</th>
+                <th>Tanggal Pinjam</th>
+                <th>Tanggal Kembali</th>
+                <th>Act</th>
+            </tr>
+            {% for data in data_list %}
+            <tr>
+                <td>{{ data.id}} </td>
+                <td>{{ data.title}} </td>
+                <td>{{ data.user_id}} </td>
+                <td>{{ data.borrow_date}} </td>
+                <td>{{ data.return_date}} </td>
+                <td>
+                    <button onclick="showUpdateForm(
+                        '{{ data.id }}', 
+                        '{{ data.title }}', 
+                        '{{ data.user_id }}', 
+                        '{{ data.borrow_date }}', 
+                        '{{ data.return_date }}')"
+                    class="updateButton">Update</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <div id="updateForm" style="display:none;">
+            <h3>Update Data</h3>
+            <form action="/form_update_pinjaman" method="post">
+                <input type="hidden" id="updateId" name="id">
+                <label class="field-label" for="updateReturnDate">Tanggal Kembali:</label>
+                <input type="date" id="updateReturnDate" name="returnDate" placeholder="Return date" required>
+                <br>
+                <input type="submit" value="submit" class="update-button">
+            </form>
+        </div>
+        <script>
+            function showUpdateForm(id, returnDate) {
+                document.getElementById('updateId').value = id;
+                document.getElementById('updateReturnDate').value = returnDate;
+                document.getElementById('updateForm').style.display = 'block';
+            }
+        </script>
+        {% else %}
+        <p>Tidak ada data yang ditemukan untuk nama peminjam yang diberikan</p>
+        {% endif %}
+
+
+    </body>
+</html>

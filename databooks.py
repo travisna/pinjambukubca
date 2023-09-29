@@ -3,18 +3,18 @@ from flask import Flask, jsonify,request,render_template
 from flask import redirect,url_for
 from flask_sqlalchemy import SQLAlchemy
 from flasgger import Swagger,swag_from
-from datetime import datetime
+from datetime import datetime,date
 import os
 
 #Mendefinisikan app
 app=Flask(__name__)
 
 #Lokasi database
-#DATABASE_PATH = 'C:/DATA TRV/TRAINING/PYTHON 230922/mypy/bcaflask/pinjambukubca/sipus.db'
+DATABASE_PATH = 'C:/DATA TRV/TRAINING/PYTHON 230922/mypy/bcaflask/pinjambukubca/sipus.db'
 
 #Konfigurai Database
-#app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///' + DATABASE_PATH
-app.config['SQLALCHEMY_DATABASE_URI']= 'mysql+mysqlconnector://root:hd9k9kgtJTI2g2oxJuqc@containers-us-west-185.railway.app:6589/railway'
+app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///' + DATABASE_PATH
+#app.config['SQLALCHEMY_DATABASE_URI']= 'mysql+mysqlconnector://root:hd9k9kgtJTI2g2oxJuqc@containers-us-west-185.railway.app:6589/railway'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['SWAGGER'] = {
@@ -101,6 +101,7 @@ def get_one_karyawan(id_karyawan):
 
 #Fungsi menambahkan Data
 @app.route('/inputBuku', methods=['GET','POST'])
+@swag_from('swagger_docs/create_data_book.yaml')
 def input_buku():
     if request.method == 'POST':
         #Menambahkan data dari form
@@ -113,6 +114,9 @@ def input_buku():
         if not title or not author or not genre or not stock:
             return render_template('create_book.html',error="Semua field wajib diisi")
 
+        if int(stock) < 0 :
+            return render_template('create_book.html',error="Stok tidak boleh minus")
+        
         new_Buku = Book (
             title = title,
             author = author,
@@ -135,6 +139,7 @@ def update_buku_ui():
     return render_template('update_book.html')
 
 @app.route('/form_update_buku',methods=['POST'])
+@swag_from('swagger_docs/update_data_book.yaml')
 def update_buku():
     try:
         id = request.form.get('id')
@@ -142,6 +147,9 @@ def update_buku():
         author = request.form.get('author')
         genre = request.form.get('genre')
         stock = request.form.get('stock')
+        
+        if int(stock) < 0 :
+            return jsonify({'message':'Stok tidak boleh minus'}),400
         
         buku = Book.query.get(id)
         
@@ -161,7 +169,7 @@ def update_buku():
     
 @app.route('/deleteBuku/<int:id>',methods=['DELETE'])
 @swag_from('swagger_docs/delete_data_book.yaml')
-def delete_karyawan(id):
+def delete_buku(id):
     try:
         book_to_delete = Book.query.filter_by(id=id).first()
         
@@ -199,6 +207,11 @@ def input_pinjam():
         #Menambahkan data dari form
         user_id = request.form.get('user_id')
         id_book = request.form.get('id')
+        book = Book.query.filter_by(id=id_book).first()
+        stockBuku = int(book.stock) - 1
+        if stockBuku<0:
+            return render_template('create_borrow.html',error="Stok buku habis")
+        
         borrow_date = datetime.strptime(request.form.get('borrow_date'),'%Y-%m-%d')
         #Cek apakah field terisi
         if not user_id or not id_book or not borrow_date:
@@ -216,6 +229,68 @@ def input_pinjam():
 
         return render_template('confirmation_borrow.html')
     return render_template('create_borrow.html',data_list=data_list)
+
+@app.route('/tampilPinjam',methods=['GET'])
+@swag_from('swagger_docs/get_all_pinjaman_data.yaml')
+def get_all_pinjaman():
+        pinjaman_list = []
+        try:
+            all_pinjaman = Borrowing.query.join(Book, Book.id==Borrowing.id_book).add_columns(Borrowing.id,Book.title,Borrowing.user_id,Borrowing.borrow_date,Borrowing.return_date).all()
+
+            #membuat daftar dari data pinjaman untyuk dikirimkan ke template
+            for pinjaman in all_pinjaman:
+                pinjaman_data = {
+                    'id': pinjaman.id,
+                    'judul_buku': pinjaman.title,
+                    'user_id': pinjaman.user_id,
+                    'borrow_date': pinjaman.borrow_date,
+                    'return_date': pinjaman.return_date,
+                }
+                pinjaman_list.append(pinjaman_data)
+        except Exception as e:
+            return render_template('error.html',pesan="Terjadi kesalahan saat mengambil data {}".format(str(e))),500
+        finally:
+            if pinjaman_list:
+                return render_template('display_borrow.html',pinjaman_list = pinjaman_list)
+            else:
+                return render_template('error.html',pesan="Tidak ada data pinjaman yang ditampilkan"),404
+            
+@app.route('/updatePinjam',methods=['GET','POST'])
+def update_pinjam_ui():
+    if request.method == 'POST':
+        search = request.form.get('search')
+        data_list = Borrowing.query.join(Book, Book.id==Borrowing.id_book).add_columns(Borrowing.id,Book.title,Borrowing.user_id,Borrowing.borrow_date,Borrowing.return_date).filter(Borrowing.user_id.like(f"%{search}%")).all()
+        #data_list = Borrowing.query.filter(Borrowing.user_id.like(f"%{search}%")).all()
+        
+        
+        return render_template('update_borrow.html',data_list=data_list)
+    return render_template('update_borrow.html')
+
+@app.route('/form_update_pinjaman',methods=['POST'])
+@swag_from('swagger_docs/update_data_pinjaman.yaml')
+def update_pinjaman():
+    try:
+        id = request.form.get('id')
+        return_date = datetime.strptime(request.form.get('returnDate'),'%Y-%m-%d')
+        
+        pinjaman = Borrowing.query.get(id)
+        
+        if not pinjaman:
+            return jsonify({'message':'Peminjam tidak ditemukan'}),404
+        
+        pinjaman.return_date = return_date
+        
+        print(pinjaman.return_date)
+        print(pinjaman.borrow_date) 
+        
+        if datetime.date(pinjaman.return_date) < pinjaman.borrow_date:
+            return jsonify({'message':'Tanggal kembali harus > dari tanggal pinjam'}),400
+        
+        db.session.commit()
+        
+        return redirect(url_for('get_all_pinjaman'))
+    except Exception as e:
+        return jsonify({'message':f'Terjadi kesalahan {str(e)}'}),500
 
 if __name__ == '__main__':
     app.run(debug = True, port = 5020)
