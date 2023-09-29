@@ -25,16 +25,16 @@ responses:
     Buku :
       type : object
       properties :
-        judul:
+        title:
           type: string
-        penulis:
+        author:
           type: string
         genre:
           type: string
-        stok:
+        stock:
           type: integer
       required:
-        - judul
-        - penulis
+        - title
+        - author
         - genre
-        - stok
+        - stock

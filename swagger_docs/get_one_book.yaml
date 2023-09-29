@@ -11,21 +11,21 @@ definitions:
       id:
         type: integer
         description: ID buku
-      judul:
+      title:
         type: string
         description: Nama buku
-      penulis:
+      author:
         type: string
         description: Nama penulis
       genre:
         type: string
         description: Jenis Genre
-      stok:
+      stock:
         type: integer
         description: Jumlah stok buku
 
 parameters:
-  - name: id_buku
+  - name: id
     in: path
     description: ID buku yang ingin ditampilkan
     required: true

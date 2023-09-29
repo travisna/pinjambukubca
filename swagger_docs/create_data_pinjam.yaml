@@ -25,16 +25,18 @@ responses:
     Pinjaman :
       type : object
       properties :
-        id_buku:
+        id_book:
           type: integer
-        peminjam:
+        user_id:
           type: string
-        tanggal_pinjam:
-          type: date
-        tanggal_kembali:
-          type: date
+        borrow_date:
+          type: string
+          format: date
+        return_date:
+          type: string
+          format: date
       required:
-        - id_buku
-        - peminjam
-        - tanggal_pinjam
-        - tanggal_kembali
+        - id_book
+        - user_id
+        - borrow_date
+        - return_date

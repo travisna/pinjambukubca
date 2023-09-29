@@ -5,7 +5,7 @@ info:
 tags:
   - name: Daftar API
 parameters:
-  - name: id_buku
+  - name: id
     in: path
     description: ID buku yang ingin dihapus
     required: true

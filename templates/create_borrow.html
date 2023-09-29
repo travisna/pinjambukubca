@@ -16,8 +16,8 @@
                 <input type="text" name="user_id" id="user_id" placeholder="Masukkan Nama" required>
                 <br>
 
-                <label for="id">Buku yang ingin dipinjam:</label>
-                <select name="id" id="id">
+                <label for="id_book">Buku yang ingin dipinjam:</label>
+                <select name="id_book" id="id_book">
                     {% if data_list %}
                         {% for data in data_list %}
                             <option value = {{ data.id}} >{{ data.title}} </option>

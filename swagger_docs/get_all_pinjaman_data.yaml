@@ -10,14 +10,16 @@ definitions:
     properties :
       id:
         type: integer      
-      id_buku:
+      id_book:
         type: integer
-      peminjam:
+      user_id:
         type: string
-      tanggal_pinjam:
-        type: date
-      tanggal_kembali:
-        type: date
+      borrow_date:
+        type: string
+        format: date
+      return_date:
+        type: string
+        format: date
     
 responses:
   200:

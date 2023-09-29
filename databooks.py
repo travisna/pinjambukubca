@@ -96,26 +96,45 @@ def get_all_book():
 #Koneksi API untuk Ambil Spesifik Data
 @app.route('/tampilBuku/<int:id>',methods=['GET'])
 @swag_from('swagger_docs/get_one_book.yaml')
-def get_one_karyawan(id_karyawan):
-        pass
+def get_one_buku(id):
+        book = Book.query.filter_by(id=id).first()
+        
+        if not book:
+            return jsonify({'message':'Buku tidak ditemukan'}),404
+        
+        buku_data = {
+            'id': book.id,
+            'title': book.title,
+            'author': book.author,
+            'genre': book.genre,
+            'stock': book.stock,
+        }
+        
+        return jsonify(buku_data),200
 
 #Fungsi menambahkan Data
 @app.route('/inputBuku', methods=['GET','POST'])
 @swag_from('swagger_docs/create_data_book.yaml')
 def input_buku():
     if request.method == 'POST':
+        if not request.form:
+            title = request.json.get('title')
+            author = request.json.get('author')
+            genre = request.json.get('genre')
+            stock = request.json.get('stock')
+        else:
         #Menambahkan data dari form
-        title = request.form.get('title')
-        author = request.form.get('author')
-        genre = request.form.get('genre')
-        stock = request.form.get('stock')
+            title = request.form.get('title')
+            author = request.form.get('author')
+            genre = request.form.get('genre')
+            stock = request.form.get('stock')
 
         #Cek apakah field terisi
         if not title or not author or not genre or not stock:
-            return render_template('create_book.html',error="Semua field wajib diisi")
+            return render_template('create_book.html',error="Semua field wajib diisi"),400
 
         if int(stock) < 0 :
-            return render_template('create_book.html',error="Stok tidak boleh minus")
+            return render_template('create_book.html',error="Stok tidak boleh minus"),400
         
         new_Buku = Book (
             title = title,
@@ -142,11 +161,18 @@ def update_buku_ui():
 @swag_from('swagger_docs/update_data_book.yaml')
 def update_buku():
     try:
-        id = request.form.get('id')
-        title = request.form.get('title')
-        author = request.form.get('author')
-        genre = request.form.get('genre')
-        stock = request.form.get('stock')
+        if not request.form:
+            id = request.json.get('id')
+            title = request.json.get('title')
+            author = request.json.get('author')
+            genre = request.json.get('genre')
+            stock = request.json.get('stock')
+        else:
+            id = request.form.get('id')
+            title = request.form.get('title')
+            author = request.form.get('author')
+            genre = request.form.get('genre')
+            stock = request.form.get('stock')
         
         if int(stock) < 0 :
             return jsonify({'message':'Stok tidak boleh minus'}),400
@@ -195,24 +221,31 @@ def delete_buku_ui():
         print(error_message)
         return render_template('error.html',pesan = error_message),500
     finally:
-        return render_template('delete_book.html',data_list = data_list),500
+        return render_template('delete_book.html',data_list = data_list),200
     
 #Fungsi menambahkan Data
 @app.route('/inputPinjam', methods=['GET','POST'])
+@swag_from('swagger_docs/create_data_pinjam.yaml')
 def input_pinjam():
     if request.method == 'GET':
         data_list = Book.query.all()
     
     if request.method == 'POST':
         #Menambahkan data dari form
-        user_id = request.form.get('user_id')
-        id_book = request.form.get('id')
+        if not request.form:
+            user_id = request.json.get('user_id')
+            id_book = request.json.get('id_book')
+            borrow_date = datetime.strptime(request.json.get('borrow_date'),'%Y-%m-%d')
+        else:
+            user_id = request.form.get('user_id')
+            id_book = request.form.get('id_book')
+            borrow_date = datetime.strptime(request.form.get('borrow_date'),'%Y-%m-%d')
+        
         book = Book.query.filter_by(id=id_book).first()
         stockBuku = int(book.stock) - 1
         if stockBuku<0:
             return render_template('create_borrow.html',error="Stok buku habis")
         
-        borrow_date = datetime.strptime(request.form.get('borrow_date'),'%Y-%m-%d')
         #Cek apakah field terisi
         if not user_id or not id_book or not borrow_date:
             return render_template('create_borrow.html',error="Semua field wajib diisi")
@@ -270,8 +303,12 @@ def update_pinjam_ui():
 @swag_from('swagger_docs/update_data_pinjaman.yaml')
 def update_pinjaman():
     try:
-        id = request.form.get('id')
-        return_date = datetime.strptime(request.form.get('returnDate'),'%Y-%m-%d')
+        if not request.form:
+            id = request.json.get('id')
+            return_date = datetime.strptime(request.json.get('return_date'),'%Y-%m-%d')
+        else:
+            id = request.form.get('id')
+            return_date = datetime.strptime(request.form.get('return_date'),'%Y-%m-%d')
         
         pinjaman = Borrowing.query.get(id)
         
