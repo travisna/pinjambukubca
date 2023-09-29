@@ -287,6 +287,25 @@ def get_all_pinjaman():
                 return render_template('display_borrow.html',pinjaman_list = pinjaman_list)
             else:
                 return render_template('error.html',pesan="Tidak ada data pinjaman yang ditampilkan"),404
+
+#Koneksi API untuk Ambil Spesifik Data
+@app.route('/tampilPinjam/<int:id>',methods=['GET'])
+@swag_from('swagger_docs/get_one_pinjaman_data.yaml')
+def get_one_pinjaman(id):
+        borrow = Borrowing.query.filter_by(id=id).first()
+        
+        if not book:
+            return jsonify({'message':'Pinjaman tidak ditemukan'}),404
+        
+        borrow_data = {
+            'id': borrow.id,
+            'id_book': borrow.id_book,
+            'user_id': borrow.user_id,
+            'borrow_date': borrow.borrow_date,
+            'return_date': borrow.return_date,
+        }
+        
+        return jsonify(borrow_data),200
             
 @app.route('/updatePinjam',methods=['GET','POST'])
 def update_pinjam_ui():
